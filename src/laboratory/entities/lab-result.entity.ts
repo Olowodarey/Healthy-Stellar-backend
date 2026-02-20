@@ -1,117 +1,56 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-    OneToOne,
-    OneToMany,
-    JoinColumn,
-    Index,
-} from 'typeorm';
-import { LabOrderItem } from './lab-order-item.entity';
-import { LabResultValue } from './lab-result-value.entity';
-
-export enum ResultStatus {
-    PRELIMINARY = 'preliminary',
-    FINAL = 'final',
-    CORRECTED = 'corrected',
-    CANCELLED = 'cancelled',
-    AMENDED = 'amended',
-}
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 @Entity('lab_results')
-@Index(['orderItemId'])
-@Index(['status'])
 export class LabResult {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({ type: 'uuid', unique: true })
-    orderItemId: string;
+  @Column()
+  @Index()
+  orderId: string;
 
-    @Column({
-        type: 'enum',
-        enum: ResultStatus,
-        default: ResultStatus.PRELIMINARY,
-    })
-    status: ResultStatus;
+  @Column()
+  testId: string;
 
-    @Column({ type: 'timestamp' })
-    performedDate: Date;
+  @Column()
+  testCode: string;
 
-    @Column({ type: 'uuid' })
-    performedBy: string;
+  @Column()
+  testName: string;
 
-    @Column({ type: 'varchar', length: 200, nullable: true })
-    performedByName: string;
+  @Column()
+  result: string;
 
-    @Column({ type: 'uuid', nullable: true })
-    verifiedBy: string;
+  @Column()
+  unit: string;
 
-    @Column({ type: 'varchar', length: 200, nullable: true })
-    verifiedByName: string;
+  @Column({ nullable: true })
+  referenceRange: string;
 
-    @Column({ type: 'timestamp', nullable: true })
-    verifiedDate: Date;
+  @Column({ default: 'normal' })
+  flag: string;
 
-    @Column({ type: 'text', nullable: true })
-    resultNotes: string;
+  @Column({ default: 'final' })
+  status: string;
 
-    @Column({ type: 'text', nullable: true })
-    interpretation: string;
+  @Column()
+  performedBy: string;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    instrumentId: string;
+  @Column('timestamp')
+  performedAt: Date;
 
-    @Column({ type: 'varchar', length: 200, nullable: true })
-    instrumentName: string;
+  @Column({ nullable: true })
+  verifiedBy: string;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    methodId: string;
+  @Column('timestamp', { nullable: true })
+  verifiedAt: Date;
 
-    @Column({ type: 'varchar', length: 200, nullable: true })
-    methodName: string;
+  @Column('text', { nullable: true })
+  comments: string;
 
-    @Column({ type: 'boolean', default: false })
-    hasCriticalValues: boolean;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @Column({ type: 'boolean', default: false })
-    hasDeltaCheck: boolean;
-
-    @Column({ type: 'text', nullable: true })
-    correctionReason: string;
-
-    @Column({ type: 'uuid', nullable: true })
-    correctedBy: string;
-
-    @Column({ type: 'timestamp', nullable: true })
-    correctedDate: Date;
-
-    @Column({ type: 'jsonb', nullable: true })
-    metadata: Record<string, any>;
-
-    @Column({ type: 'uuid', nullable: true })
-    createdBy: string;
-
-    @Column({ type: 'uuid', nullable: true })
-    updatedBy: string;
-
-    @CreateDateColumn()
-    createdAt: Date;
-
-    @UpdateDateColumn()
-    updatedAt: Date;
-
-    // Relations
-    @OneToOne(() => LabOrderItem, (item) => item.result, {
-        onDelete: 'CASCADE',
-    })
-    @JoinColumn({ name: 'orderItemId' })
-    orderItem: LabOrderItem;
-
-    @OneToMany(() => LabResultValue, (value) => value.labResult, {
-        cascade: true,
-    })
-    values: LabResultValue[];
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

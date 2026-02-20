@@ -1,74 +1,64 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { PharmacyInventory } from './pharmacy-inventory.entity';
-import { DrugInteraction } from './drug-interaction.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 @Entity('drugs')
 export class Drug {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true, length: 11 })
-  ndcCode: string; // National Drug Code (10 or 11 digits)
+  @Column({ unique: true })
+  @Index()
+  ndc: string;
 
   @Column()
-  brandName: string;
+  name: string;
 
   @Column()
   genericName: string;
-
-  @Column('text')
-  description: string;
 
   @Column()
   manufacturer: string;
 
   @Column()
-  dosageForm: string; // tablet, capsule, liquid, injection, etc.
+  dosageForm: string;
 
   @Column()
-  strength: string; // e.g., "500mg", "10mg/ml"
+  strength: string;
+
+  @Column('decimal', { precision: 10, scale: 2 })
+  unitPrice: number;
+
+  @Column('int')
+  quantityOnHand: number;
+
+  @Column('int')
+  reorderLevel: number;
+
+  @Column('int')
+  reorderQuantity: number;
 
   @Column()
-  route: string; // oral, IV, topical, etc.
+  lotNumber: string;
 
-  @Column({ type: 'enum', enum: ['I', 'II', 'III', 'IV', 'V', 'non-controlled'] })
-  controlledSubstanceSchedule: string;
+  @Column('date')
+  expirationDate: Date;
 
-  @Column('simple-array', { nullable: true })
-  therapeuticClasses: string[];
+  @Column({ default: 'active' })
+  status: string;
 
-  @Column('simple-array', { nullable: true })
-  indications: string[];
+  @Column('simple-json', { nullable: true })
+  interactions: string[];
 
-  @Column('simple-array', { nullable: true })
+  @Column('simple-json', { nullable: true })
   contraindications: string[];
 
-  @Column('text', { nullable: true })
-  warnings: string;
-
-  @Column('text', { nullable: true })
-  sideEffects: string;
-
-  @Column({ default: true })
-  requiresPrescription: boolean;
+  @Column({ default: false })
+  requiresRefrigeration: boolean;
 
   @Column({ default: false })
-  isRefrigerated: boolean;
+  controlledSubstance: boolean;
 
-  @Column({ default: false })
-  isHazardous: boolean;
-
-  @Column({ default: true })
-  isActive: true;
-
-  @OneToMany(() => PharmacyInventory, inventory => inventory.drug)
-  inventory: PharmacyInventory[];
-
-  @OneToMany(() => DrugInteraction, interaction => interaction.drug1)
-  interactions1: DrugInteraction[];
-
-  @OneToMany(() => DrugInteraction, interaction => interaction.drug2)
-  interactions2: DrugInteraction[];
+  @Column({ nullable: true })
+  scheduleClass: string;
 
   @CreateDateColumn()
   createdAt: Date;
