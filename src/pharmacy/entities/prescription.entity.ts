@@ -1,6 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
-import { Drug } from './drug.entity';
-import { PrescriptionItem } from './prescription-item.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 @Entity('prescriptions')
 export class Prescription {
@@ -8,64 +6,60 @@ export class Prescription {
   id: string;
 
   @Column()
+  @Index()
   prescriptionNumber: string;
 
   @Column()
+  @Index()
   patientId: string;
 
   @Column()
-  patientName: string;
-
-  @Column({ type: 'date' })
-  patientDOB: Date;
-
-  @Column('simple-array', { nullable: true })
-  patientAllergies: string[];
+  providerId: string;
 
   @Column()
-  prescriberId: string;
+  drugId: string;
 
   @Column()
-  prescriberName: string;
+  drugName: string;
 
   @Column()
-  prescriberLicense: string;
+  dosage: string;
 
   @Column()
-  prescriberDEA: string; // DEA number for controlled substances
+  quantity: number;
 
-  @Column({ type: 'date' })
-  prescriptionDate: Date;
+  @Column()
+  refills: number;
 
-  @Column({ type: 'enum', enum: ['pending', 'verified', 'filling', 'filled', 'dispensed', 'cancelled'] })
+  @Column()
+  refillsRemaining: number;
+
+  @Column('text')
+  instructions: string;
+
+  @Column('date')
+  prescribedDate: Date;
+
+  @Column('date', { nullable: true })
+  filledDate: Date;
+
+  @Column({ default: 'pending' })
   status: string;
 
-  @Column({ type: 'int', default: 0 })
-  refillsAllowed: number;
+  @Column({ nullable: true })
+  pharmacistId: string;
 
-  @Column({ type: 'int', default: 0 })
-  refillsRemaining: number;
+  @Column({ nullable: true })
+  verifiedBy: string;
+
+  @Column('timestamp', { nullable: true })
+  verifiedAt: Date;
+
+  @Column('simple-json', { nullable: true })
+  safetyChecks: any;
 
   @Column('text', { nullable: true })
   notes: string;
-
-  @Column({ default: false })
-  requiresCounseling: boolean;
-
-  @Column({ nullable: true })
-  verifiedBy: string; // pharmacist who verified
-
-  @Column({ type: 'timestamp', nullable: true })
-  verifiedAt: Date;
-
-  @Column({ nullable: true })
-  dispensedBy: string; // pharmacist who dispensed
-
-  @Column({ type: 'timestamp', nullable: true })
-  dispensedAt: Date;
-
-  @OneToMany(() => PrescriptionItem, item => item.prescription)
-  items: PrescriptionItem[];
 
   @CreateDateColumn()
   createdAt: Date;

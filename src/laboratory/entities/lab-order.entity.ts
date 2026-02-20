@@ -1,125 +1,48 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-    OneToMany,
-    Index,
-} from 'typeorm';
-import { LabOrderItem } from './lab-order-item.entity';
-import { Specimen } from './specimen.entity';
-
-export enum OrderStatus {
-    ORDERED = 'ordered',
-    COLLECTED = 'collected',
-    IN_PROGRESS = 'in_progress',
-    COMPLETED = 'completed',
-    VERIFIED = 'verified',
-    CANCELLED = 'cancelled',
-}
-
-export enum OrderPriority {
-    ROUTINE = 'routine',
-    URGENT = 'urgent',
-    STAT = 'stat',
-}
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 @Entity('lab_orders')
-@Index(['orderNumber'])
-@Index(['patientId', 'orderDate'])
-@Index(['status', 'priority'])
 export class LabOrder {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({ type: 'varchar', length: 50, unique: true })
-    @Index()
-    orderNumber: string;
+  @Column({ unique: true })
+  @Index()
+  orderNumber: string;
 
-    @Column({ type: 'uuid' })
-    @Index()
-    patientId: string;
+  @Column()
+  @Index()
+  patientId: string;
 
-    @Column({ type: 'varchar', length: 200 })
-    patientName: string;
+  @Column()
+  providerId: string;
 
-    @Column({ type: 'uuid' })
-    orderingProviderId: string;
+  @Column('simple-json')
+  tests: Array<{ testId: string; testCode: string; testName: string }>;
 
-    @Column({ type: 'varchar', length: 200 })
-    orderingProviderName: string;
+  @Column({ default: 'pending' })
+  status: string;
 
-    @Column({
-        type: 'enum',
-        enum: OrderStatus,
-        default: OrderStatus.ORDERED,
-    })
-    status: OrderStatus;
+  @Column('date')
+  orderDate: Date;
 
-    @Column({
-        type: 'enum',
-        enum: OrderPriority,
-        default: OrderPriority.ROUTINE,
-    })
-    priority: OrderPriority;
+  @Column('date', { nullable: true })
+  collectionDate: Date;
 
-    @Column({ type: 'timestamp' })
-    orderDate: Date;
+  @Column({ nullable: true })
+  specimenId: string;
 
-    @Column({ type: 'timestamp', nullable: true })
-    collectionDate: Date;
+  @Column({ default: 'routine' })
+  priority: string;
 
-    @Column({ type: 'timestamp', nullable: true })
-    completedDate: Date;
+  @Column('text', { nullable: true })
+  clinicalInfo: string;
 
-    @Column({ type: 'timestamp', nullable: true })
-    verifiedDate: Date;
+  @Column('text', { nullable: true })
+  notes: string;
 
-    @Column({ type: 'text', nullable: true })
-    clinicalIndication: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @Column({ type: 'text', nullable: true })
-    notes: string;
-
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    departmentId: string;
-
-    @Column({ type: 'varchar', length: 200, nullable: true })
-    departmentName: string;
-
-    @Column({ type: 'uuid', nullable: true })
-    cancelledBy: string;
-
-    @Column({ type: 'timestamp', nullable: true })
-    cancelledDate: Date;
-
-    @Column({ type: 'text', nullable: true })
-    cancellationReason: string;
-
-    @Column({ type: 'jsonb', nullable: true })
-    metadata: Record<string, any>;
-
-    @Column({ type: 'uuid', nullable: true })
-    createdBy: string;
-
-    @Column({ type: 'uuid', nullable: true })
-    updatedBy: string;
-
-    @CreateDateColumn()
-    createdAt: Date;
-
-    @UpdateDateColumn()
-    updatedAt: Date;
-
-    // Relations
-    @OneToMany(() => LabOrderItem, (item) => item.labOrder, {
-        cascade: true,
-    })
-    items: LabOrderItem[];
-
-    @OneToMany(() => Specimen, (specimen) => specimen.labOrder, {
-        cascade: true,
-    })
-    specimens: Specimen[];
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

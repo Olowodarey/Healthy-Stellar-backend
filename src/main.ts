@@ -51,6 +51,13 @@ async function bootstrap() {
     .addTag('Consent Management', 'Patient consent and data sharing')
     .addTag('File Attachments', 'Medical document and image management')
     .addTag('Reporting', 'Medical analytics and compliance reports')
+    .addTag('Billing & Invoicing', 'Patient billing and invoice management')
+    .addTag('Payment Processing', 'Payment collection and reconciliation')
+    .addTag('Insurance Claims', 'Insurance claim submission and tracking')
+    .addTag('Insurance Verification', 'Eligibility and benefits verification')
+    .addTag('Financial Reporting & Analytics', 'Revenue cycle and financial analytics')
+    .addTag('Pharmacy Management', 'Drug inventory and prescription management')
+    .addTag('Laboratory Management', 'Lab test ordering and result management')
     .addServer('https://api.medical-system.com', 'Production Server')
     .addServer('https://staging-api.medical-system.com', 'Staging Server')
     .build();
