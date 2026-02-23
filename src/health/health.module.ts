@@ -6,6 +6,9 @@ import { PostgresHealthIndicator } from './indicators/postgres.indicator';
 import { RedisHealthIndicator } from './indicators/redis.indicator';
 import { IpfsHealthIndicator } from './indicators/ipfs.indicator';
 import { StellarHealthIndicator } from './indicators/stellar.indicator';
+import { RedisHealthIndicator } from './indicators/redis.health';
+import { IpfsHealthIndicator } from './indicators/ipfs.health';
+import { StellarHealthIndicator } from './indicators/stellar.health';
 
 @Module({
   imports: [TerminusModule, HttpModule],
@@ -16,5 +19,6 @@ import { StellarHealthIndicator } from './indicators/stellar.indicator';
     IpfsHealthIndicator,
     StellarHealthIndicator,
   ],
+  providers: [RedisHealthIndicator, IpfsHealthIndicator, StellarHealthIndicator],
 })
 export class HealthModule {}
