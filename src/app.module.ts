@@ -9,6 +9,7 @@ import { APP_FILTER, APP_PIPE, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { BillingModule } from './billing/billing.module';
 import { MedicalRecordsModule } from './medical-records/medical-records.module';
+import { RecordsModule } from './records/records.module';
 import { CommonModule } from './common/common.module';
 import { PatientModule } from './patients/patients.module';
 import { LaboratoryModule } from './laboratory/laboratory.module';
@@ -141,6 +142,7 @@ import { AuditLogEntity } from './common/audit/audit-log.entity';
     AuthModule,
     BillingModule,
     MedicalRecordsModule,
+    RecordsModule,
     PatientModule,
     LaboratoryModule,
     DiagnosisModule,
