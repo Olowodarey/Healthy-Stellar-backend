@@ -4,7 +4,7 @@ import { NotificationsGateway } from '../notifications.gateway';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private gateway: NotificationsGateway) {}
+  constructor(private gateway: NotificationsGateway) { }
 
   emitRecordAccessed(actorId: string, resourceId: string, metadata?: Record<string, any>): void {
     this.emitEvent({
@@ -43,6 +43,17 @@ export class NotificationsService {
       resourceId,
       timestamp: new Date(),
       metadata,
+    });
+  }
+
+  async sendEmail(to: string, subject: string, template: string, context: Record<string, any>): Promise<void> {
+    console.log(`[Mock Email] Sent to ${to}: ${subject}`);
+    this.emitEvent({
+      eventType: 'REPORT_READY' as any,
+      actorId: 'system',
+      resourceId: to,
+      timestamp: new Date(),
+      metadata: context,
     });
   }
 
