@@ -1,14 +1,9 @@
 import { APP_FILTER, APP_GUARD, APP_PIPE, APP_INTERCEPTOR } from '@nestjs/core';
-import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ThrottlerModule } from '@nestjs/throttler';
-import { ConfigModule } from '@nestjs/config';
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { BillingModule } from './billing/billing.module';
 import { MedicalRecordsModule } from './medical-records/medical-records.module';
@@ -27,7 +22,7 @@ import { TenantModule } from './tenant/tenant.module';
 import { DatabaseConfig } from './config/database.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HealthController } from './health.controller';
+import { HealthModule } from './health/health.module';
 import { ValidationModule } from './common/validation/validation.module';
 import { MedicalEmergencyErrorFilter } from './common/errors/medical-emergency-error.filter';
 import { MedicalDataValidationPipe } from './common/validation/medical-data.validator.pipe';
@@ -95,7 +90,6 @@ const getUserTrackerFromRequest = (req: any): string => {
   return req?.ip || 'unknown-ip';
 };
 import { TenantInterceptor } from './tenant/interceptors/tenant.interceptor';
-import { AuditLogEntity } from './common/audit/audit-log.entity';
 import { JobsModule } from './jobs/jobs.module';
 import { AuditModule } from './common/audit/audit.module';
 
@@ -131,6 +125,7 @@ import { AuditModule } from './common/audit/audit.module';
     EmergencyOperationsModule,
     ValidationModule,
     InfectionControlModule,
+    HealthModule,
     NotificationsModule,
     QueueModule,
     FhirModule,
@@ -141,7 +136,7 @@ import { AuditModule } from './common/audit/audit.module';
     ReportsModule,
     TenantConfigModule,
   ],
-  controllers: [AppController, HealthController],
+  controllers: [AppController],
   providers: [
     AppService,
     {
