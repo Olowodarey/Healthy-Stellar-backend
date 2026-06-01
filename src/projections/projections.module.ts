@@ -16,6 +16,7 @@ import { ProjectionRebuildProcessor } from './rebuild/projection-rebuild.process
 import { ProjectionDlqProcessor } from './rebuild/projection-dlq.processor';
 import { ProjectionsAdminController } from './projections-admin.controller';
 
+// Read-model entities for the CQRS projection system
 import { MedicalRecordReadModel } from './entities/medical-record-read.entity';
 import { AccessGrantReadModel } from './entities/access-grant-read.entity';
 import { AuditLogProjection } from './entities/audit-log-projection.entity';

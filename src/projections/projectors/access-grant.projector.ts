@@ -58,14 +58,14 @@ export class AccessGrantProjector implements IEventHandler<
       .insert()
       .into(AccessGrantReadModel)
       .values({
-        id: event.grantId,
+        aggregateId: event.grantId,
         patientId: event.patientId,
-        providerId: event.providerId,
+        grantedTo: event.providerId,
         grantedBy: event.grantedBy,
-        isActive: true,
+        status: 'ACTIVE',
         expiresAt: event.expiresAt,
-        grantedAt: event.occurredAt,
-        revokedAt: null,
+        version: 1,
+        updatedAt: event.occurredAt,
       })
       .orIgnore()
       .execute();
@@ -75,8 +75,11 @@ export class AccessGrantProjector implements IEventHandler<
     await this.readRepo
       .createQueryBuilder()
       .update(AccessGrantReadModel)
-      .set({ isActive: false, revokedAt: event.occurredAt })
-      .where('id = :id AND is_active = true', { id: event.grantId })
+      .set({ status: 'REVOKED', revokedBy: event.revokedBy, updatedAt: event.occurredAt })
+      .where('aggregate_id = :aggregateId AND status = :activeStatus', {
+        aggregateId: event.grantId,
+        activeStatus: 'ACTIVE',
+      })
       .execute();
   }
 }

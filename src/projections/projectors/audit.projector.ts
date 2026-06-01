@@ -46,10 +46,9 @@ export class AuditProjector implements IEventHandler<AuditableEvent> {
         .insert()
         .into(AuditLogProjection)
         .values({
-          id: () => 'gen_random_uuid()',
-          eventType: event.constructor.name,
           aggregateId: this.extractEntityId(event),
-          aggregateType: event.constructor.name,
+          aggregateType: this.extractAggregateType(event),
+          eventType: event.constructor.name,
           payload: event as unknown as Record<string, unknown>,
           version: event.version,
           occurredAt: event.occurredAt,
@@ -84,5 +83,12 @@ export class AuditProjector implements IEventHandler<AuditableEvent> {
     if (event instanceof RecordAmendedEvent) return event.amendedBy;
     if (event instanceof AccessGrantedEvent) return event.grantedBy;
     return event.revokedBy;
+  }
+
+  private extractAggregateType(event: AuditableEvent): string {
+    if (event instanceof RecordUploadedEvent || event instanceof RecordAmendedEvent) {
+      return 'MedicalRecord';
+    }
+    return 'AccessGrant';
   }
 }
